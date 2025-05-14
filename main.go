@@ -271,13 +271,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Handle game over and restart
 		case "r":
-			if m.health <= 0 {
-				return initialModel(), nil // Restart the game
 			}
 		case "t":
 			debugMode = !debugMode
 			return m, nil
 		}
+	}
 	}
 	return m, nil
 }
@@ -322,6 +321,7 @@ func (m *model) View() string {
 		s += "             Game Over!             \n"
 		s += fmt.Sprintf("             Score: %-4d           \n", m.calculateScore())
 		s += " Press 'r' to restart the game.   \n"
+		s += " Press 't' to toggle debug mode. \n"
 		s += "--------------------------------------------------\n"
 	} else {
 		s += fmt.Sprintf(" Health ❤️: %-29d \n", m.health)
