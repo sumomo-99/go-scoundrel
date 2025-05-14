@@ -147,7 +147,6 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	}
 
 	card := m.room[m.selectedCard]
-	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
 
 	if m.fightingBarehanded {
 		m.health -= card.Value
