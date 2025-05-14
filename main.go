@@ -242,17 +242,14 @@ func (m *model) selectCard(index int) *model {
 			m.selectedCard = index
 			m.fightMonster(card)
 			m.choosingFight = true
-			return m
-		}
-
-		if m.cardsChosen == 3 {
-			m.dealRoom()
-			return m
 		}
 	} else {
 		fmt.Println("Invalid card selection")
 	}
 
+	if m.cardsChosen == 3 {
+		m.dealRoom()
+	}
 	return m
 }
 
