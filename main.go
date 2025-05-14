@@ -31,6 +31,7 @@ type model struct {
 	fightingBarehanded bool // True if the player chose to fight barehanded
 	avoidedLastRoom bool          // True if the player avoided the room last turn
 	potionUsedThisTurn bool
+	cardHistory      []Card
 }
 
 func initialModel() *model {
@@ -58,6 +59,7 @@ func initialModel() *model {
 		fightingBarehanded: false,
 		avoidedLastRoom: false,
 		potionUsedThisTurn: false,
+		cardHistory:      []Card{},
 	}
 
 	// Deal initial room
@@ -305,6 +307,9 @@ func (m *model) selectCard(index int) *model {
 		fmt.Println("Invalid card selection")
 	}
 
+	// Add the selected card to the history
+	m.cardHistory = append(m.cardHistory, card)
+
 	if len(m.room) == 1 {
 		m.dealRoom()
 	}
@@ -327,6 +332,10 @@ func (m *model) View() string {
 		if debugMode {
 			s += " Debug: Room values:\n"
 			for _, card := range m.room {
+				s += fmt.Sprintf("   %v\n", card)
+			}
+			s += " Card History:\n"
+			for _, card := range m.cardHistory {
 				s += fmt.Sprintf("   %v\n", card)
 			}
 			s += "--------------------------------------------------\n"
