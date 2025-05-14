@@ -360,9 +360,9 @@ func (m *model) View() string {
 			if m.equippedWeapon.MonsterValue > 0 {
 				weaponStr += fmt.Sprintf(" (Monster: %d)", m.equippedWeapon.MonsterValue)
 			}
-			s += fmt.Sprintf(" Equipped Weapon 🗡️: %-28s \n", weaponStr)
+			s += fmt.Sprintf(" Equipped Weapon 🗡️: %-28s\n", weaponStr)
 			s += "--------------------------------------------------\n"
-			s += fmt.Sprintf(" Discard Pile ♻️: %-21d \n", len(m.discardPile))
+			s += fmt.Sprintf(" Discard Pile ♻️: %-21d\n", len(m.discardPile))
 			s += "--------------------------------------------------\n"
 		}
 	}
