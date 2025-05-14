@@ -302,6 +302,11 @@ func (m *model) selectCard(index int) *model {
 	} else {
 		fmt.Println("Invalid card selection")
 	}
+
+	// Check if only one card is left in the room after selecting a monster
+	if len(m.room) == 1 && card.Type == "Monster" {
+		m.dealRoom()
+	}
 	return m
 }
 
