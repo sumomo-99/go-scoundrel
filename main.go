@@ -164,6 +164,15 @@ func (m *model) usePotion(card Card) {
 		}
 		m.discard(card)
 		m.potionUsedThisTurn = true
+
+		// Remove the card from the room
+		m.room = append(m.room[:index], m.room[index+1:]...)
+
+		// If 3 cards have been chosen (or removed), deal a new room
+		if 4-len(m.room) == 3 {
+			m.dealRoom()
+		}
+
 	} else {
 		m.discard(card) // Discard the potion without using it
 	}
