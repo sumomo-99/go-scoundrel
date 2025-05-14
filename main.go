@@ -281,8 +281,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *model) selectCard(index int) *model {
+	var card Card // Declare card variable
+
 	if index >= 0 && index < len(m.room) && m.cardsChosen < 3 {
-		card := m.room[index]
+		card = m.room[index]
 		m.selectedCard = index
 		m.cardsChosen++
 
