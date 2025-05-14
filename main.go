@@ -161,6 +161,7 @@ func (m *model) equipWeapon(card Card) {
 	}
 	m.equippedWeapon = card
 	m.equippedWeapon.MonsterValue = 0 // Reset monster value when equipping a new weapon
+	m.weaponLimit = 14
 }
 
 func (m *model) usePotion(card Card) {
@@ -213,6 +214,8 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	}
 	m.discard(card)
 
+	m.cardHistory[len(m.cardHistory)-1].Health = m.health
+
 	// Remove the card from the room
 	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
 	m.selectedCard = -1
@@ -230,6 +233,7 @@ func (m *model) Init() tea.Cmd {
 }
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -248,9 +252,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.avoidedLastRoom = true // Mark that the room was avoided
 				return m, nil
 			}
-		case "d":
-			m.dealRoom()
-			return m, nil
 		case "1":
 			return m.selectCard(0), nil
 		case "2":
@@ -315,6 +316,9 @@ func (m *model) selectCard(index int) *model {
 	// Add the selected card and current health to the history
 	m.cardHistory = append(m.cardHistory, CardWithHealth{Card: card, Health: m.health})
 
+	if len(m.room) != 4 {
+		m.avoidedLastRoom = true
+	}
 	if len(m.room) == 1 {
 		m.dealRoom()
 	}
