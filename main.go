@@ -231,6 +231,7 @@ func (m *model) selectCard(index int) *model {
 		switch card.Type {
 		case "Weapon":
 			m.equipWeapon(card)
+			m.room = append(m.room[:index], m.room[index+1:]...)
 		case "Potion":
 			m.usePotion(card)
 			m.room = append(m.room[:index], m.room[index+1:]...)
