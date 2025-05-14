@@ -366,7 +366,7 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 		} else {
 			weaponStr := fmt.Sprintf("%s %d", m.equippedWeapon.Suit, m.equippedWeapon.Value)
-			if m.equippedWeapon.MonsterValue > 0 {
+			if m.equippedWeapon.MonsterValue != 0 {
 				weaponStr += fmt.Sprintf(" (Monster: %d)", m.equippedWeapon.MonsterValue)
 			}
 			s += fmt.Sprintf(" Equipped Weapon 🗡️: %-28s\n", weaponStr)
