@@ -174,6 +174,16 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.selectCard(3), nil
 		}
 	}
+
+	// Handle game over and restart
+	if m.health <= 0 {
+		// Check for restart key
+		if msg.String() == "r" {
+			return initialModel(), nil // Restart the game
+		}
+		return m, nil
+	}
+
 	return m, nil
 }
 
@@ -214,24 +224,30 @@ func (m *model) selectCard(index int) *model {
 
 func (m *model) View() string {
 	s := "--------------------------------------------------\n"
-	s += fmt.Sprintf("| Health: %-31d |\n", m.health)
-	s += "--------------------------------------------------\n"
-	s += fmt.Sprintf("| Dungeon: %-27d Cards |\n", len(m.dungeon))
-	s += "--------------------------------------------------\n"
-	roomStr := ""
-	for i, card := range m.room {
-		selected := ""
-		if i == m.selectedCard {
-			selected = "*" // Mark the selected card
+	if m.health <= 0 {
+		s += "|             Game Over!             |\n"
+		s += "| Press 'r' to restart the game.   |\n"
+		s += "--------------------------------------------------\n"
+	} else {
+		s += fmt.Sprintf("| Health: %-31d |\n", m.health)
+		s += "--------------------------------------------------\n"
+		s += fmt.Sprintf("| Dungeon: %-27d Cards |\n", len(m.dungeon))
+		s += "--------------------------------------------------\n"
+		roomStr := ""
+		for i, card := range m.room {
+			selected := ""
+			if i == m.selectedCard {
+				selected = "*" // Mark the selected card
+			}
+			roomStr += fmt.Sprintf("[%d:%s%s %d]", i+1, selected, card.Suit, card.Value)
 		}
-		roomStr += fmt.Sprintf("[%d:%s%s %d]", i+1, selected, card.Suit, card.Value)
+		s += fmt.Sprintf("| Room: %-34s |\n", roomStr)
+		s += "--------------------------------------------------\n"
+		s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
+		s += "--------------------------------------------------\n"
+		s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
+		s += "--------------------------------------------------\n"
 	}
-	s += fmt.Sprintf("| Room: %-34s |\n", roomStr)
-	s += "--------------------------------------------------\n"
-	s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
-	s += "--------------------------------------------------\n"
-	s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
-	s += "--------------------------------------------------\n"
 	return s
 }
 
