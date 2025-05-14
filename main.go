@@ -330,10 +330,6 @@ func (m *model) View() string {
 
 		// Debug mode: display room values
 		if debugMode {
-			s += " Debug: Room values:\n"
-			for _, card := range m.room {
-				s += fmt.Sprintf("   %v\n", card)
-			}
 			s += " Card History:\n"
 			for _, card := range m.cardHistory {
 				s += fmt.Sprintf("   %v\n", card)
