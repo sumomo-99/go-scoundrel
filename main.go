@@ -285,6 +285,10 @@ func (m *model) selectCard(index int) *model {
 			m.fightMonster(card)
 			m.choosingFight = true
 		}
+
+		if m.cardsChosen == 3 {
+			m.dealRoom()
+		}
 	} else {
 		fmt.Println("Invalid card selection")
 	}
