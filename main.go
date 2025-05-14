@@ -290,6 +290,8 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 		}
 	}
+	return s
+}
 
 func main() {
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
