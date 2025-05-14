@@ -98,11 +98,8 @@ func createDeck() []Card {
 }
 
 func (m *model) dealRoom() {
-	// Clear the room
-	m.room = []Card{}
-
-	// Deal 4 cards from the dungeon to the room
-	for i := 0; i < 4; i++ {
+	// Deal cards from the dungeon to the room until there are 4 cards
+	for len(m.room) < 4 {
 		if len(m.dungeon) > 0 {
 			card := m.dungeon[0]
 			m.dungeon = m.dungeon[1:]
