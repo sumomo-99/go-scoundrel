@@ -12,3 +12,11 @@ The game rules are based on the [Scoundrel.pdf](http://stfj.net/art/2011/Scoundr
 
 - Implemented in Go.
 - Uses Bubble Tea for a terminal-based user interface.
+
+## How to Run
+
+To run the game, execute the following command:
+
+```bash
+go run main.go
+```
