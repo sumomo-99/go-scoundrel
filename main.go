@@ -151,39 +151,27 @@ func (m *model) Init() tea.Cmd {
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		if msg.String() == "ctrl+c" {
+		switch msg.String() {
+		case "ctrl+c":
 			return m, tea.Quit
-		}
-		// Example: Press 'd' to deal a new room
-		if msg.String() == "d" {
+		case "d":
 			m.dealRoom()
 			return m, nil
-		}
-
-		// Select a card from the room
-		if msg.String() == "1" {
+		case "1":
 			return m.selectCard(0), nil
-		}
-		if msg.String() == "2" {
+		case "2":
 			return m.selectCard(1), nil
-		}
-		if msg.String() == "3" {
+		case "3":
 			return m.selectCard(2), nil
-		}
-		if msg.String() == "4" {
+		case "4":
 			return m.selectCard(3), nil
+		// Handle game over and restart
+		case "r":
+			if m.health <= 0 {
+				return initialModel(), nil // Restart the game
+			}
 		}
 	}
-
-	// Handle game over and restart
-	if m.health <= 0 {
-		// Check for restart key
-		if msg.String() == "r" {
-			return initialModel(), nil // Restart the game
-		}
-		return m, nil
-	}
-
 	return m, nil
 }
 
