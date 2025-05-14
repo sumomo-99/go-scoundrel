@@ -308,9 +308,9 @@ func (m *model) View() string {
 		s += " Press 'r' to restart the game.   \n"
 		s += "--------------------------------------------------\n"
 	} else {
-		s += fmt.Sprintf(" Health: %-31d \n", m.health)
+		s += fmt.Sprintf(" Health ❤️: %-29d \n", m.health)
 		s += "--------------------------------------------------\n"
-		s += fmt.Sprintf(" Dungeon: %-27d Cards \n", len(m.dungeon))
+		s += fmt.Sprintf(" Dungeon 💥: %-25d Cards \n", len(m.dungeon))
 		s += "--------------------------------------------------\n"
 
 		// Show avoid room option if not avoided last room
@@ -328,7 +328,7 @@ func (m *model) View() string {
 			roomStr += fmt.Sprintf("[%d:%s%s %d]", i+1, selected, card.Suit, card.Value)
 		}
 
-		s += fmt.Sprintf(" Room: %-34s \n", roomStr)
+		s += fmt.Sprintf(" Room 🚪: %-32s \n", roomStr)
 		s += "--------------------------------------------------\n"
 
 		if m.choosingFight {
@@ -339,13 +339,13 @@ func (m *model) View() string {
 			if m.equippedWeapon.MonsterValue > 0 {
 				weaponStr += fmt.Sprintf(" (Monster: %d)", m.equippedWeapon.MonsterValue)
 			}
-			s += fmt.Sprintf(" Equipped Weapon: %-32s \n", weaponStr)
+			s += fmt.Sprintf(" Equipped Weapon 🗡️: %-28s \n", weaponStr)
 			s += "--------------------------------------------------\n"
-			s += fmt.Sprintf(" Discard Pile: %-23d \n", len(m.discardPile))
+			s += fmt.Sprintf(" Discard Pile ♻️: %-21d \n", len(m.discardPile))
 			s += "--------------------------------------------------\n"
 		}
 	}
-	s += fmt.Sprintf(" Score: %-32d \n", m.calculateScore())
+	s += fmt.Sprintf(" Score 💰: %-30d \n", m.calculateScore())
 	s += "--------------------------------------------------\n"
 	return s
 }
