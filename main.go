@@ -242,23 +242,14 @@ func (m *model) selectCard(index int) *model {
 			return m
 		}
 
-		// If 3 cards have been chosen, discard the remaining card and deal a new room
+		// If 3 cards have been chosen, deal a new room
 		if m.cardsChosen == 3 {
-			if len(m.room) > 0 {
-				m.discard(m.room[0])
-			}
 			m.dealRoom()
 			return m
 		}
 	}
 
-	// If the room is empty, deal a new room
-	if len(m.room) == 0 {
-		m.dealRoom()
-		return m
-	} else {
-		fmt.Println("Invalid card selection")
-	}
+	fmt.Println("Invalid card selection")
 	return m
 }
 
