@@ -290,45 +290,6 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 		}
 	}
-	return s
-}
-
-func (m *model) View() string {
-	s := "--------------------------------------------------\n"
-	if m.health <= 0 {
-		s += "|             Game Over!             |\n"
-		s += "| Press 'r' to restart the game.   |\n"
-		s += "--------------------------------------------------\n"
-	} else {
-		s += fmt.Sprintf("| Health: %-31d |\n", m.health)
-		s += "--------------------------------------------------\n"
-		s += fmt.Sprintf("| Dungeon: %-27d Cards |\n", len(m.dungeon))
-		s += "--------------------------------------------------\n"
-
-		roomStr := ""
-		for i, card := range m.room {
-			selected := ""
-			if i == m.selectedCard {
-				selected = "*" // Mark the selected card
-			}
-			roomStr += fmt.Sprintf("[%d:%s%s %d]", i+1, selected, card.Suit, card.Value)
-		}
-
-		s += fmt.Sprintf("| Room: %-34s |\n", roomStr)
-		s += "--------------------------------------------------\n"
-
-		if m.choosingFight {
-			s += "| Fight Barehanded (b) or With Weapon (w)? |\n"
-			s += "--------------------------------------------------\n"
-		} else {
-			s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
-			s += "--------------------------------------------------\n"
-			s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
-			s += "--------------------------------------------------\n"
-		}
-	}
-	return s
-}
 
 func main() {
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
