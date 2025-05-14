@@ -1,6 +1,6 @@
 module github.com/sumomo-99/go-scoundrel
 
-go 1.24.2
+go 1.24.3
 
 require github.com/charmbracelet/bubbletea v1.3.5
 
