@@ -247,7 +247,6 @@ func (m *model) selectCard(index int) *model {
 
 		// If 3 cards have been chosen, deal a new room
 		if m.cardsChosen == 3 {
-			// Leave the remaining card in the room
 			m.dealRoom()
 			return m
 		}
