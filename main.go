@@ -9,6 +9,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+var debugMode = true // Enable or disable debug mode
+
 type Card struct {
 	Suit      string
 	Value     int
@@ -312,7 +314,14 @@ func (m *model) View() string {
 		s += fmt.Sprintf(" Health ❤️: %-29d \n", m.health)
 		s += "--------------------------------------------------\n"
 		s += fmt.Sprintf(" Dungeon 💥: %-25d Cards \n", len(m.dungeon))
-		s += "--------------------------------------------------\n"
+
+		// Debug mode: display room values
+		if debugMode {
+			s += fmt.Sprintf(" Debug: Room values: %v\n", m.room)
+			s += "--------------------------------------------------\n"
+		} else {
+			s += "--------------------------------------------------\n"
+		}
 
 		// Show avoid room option if not avoided last room
 		if !m.avoidedLastRoom {
