@@ -250,7 +250,12 @@ func (m *model) selectCard(index int) *model {
 			m.dealRoom()
 			return m
 		}
+	}
 
+	// If the room is empty, deal a new room
+	if len(m.room) == 0 {
+		m.dealRoom()
+		return m
 	} else {
 		fmt.Println("Invalid card selection")
 	}
