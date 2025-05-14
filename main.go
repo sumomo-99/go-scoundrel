@@ -239,6 +239,9 @@ func (m *model) selectCard(index int) *model {
 			m.fightMonster(card)
 			m.choosingFight = true
 			return m
+		case "Weapon":
+			m.equipWeapon(card)
+			m.room = append(m.room[:index], m.room[index+1:]...)
 		}
 
 		// If 3 cards have been chosen, discard the remaining card and deal a new room
