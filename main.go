@@ -27,6 +27,7 @@ type model struct {
 	weaponLimit    int           // The maximum value a weapon can be used on
 	choosingFight  bool          // True if the player is choosing how to fight
 	fightingBarehanded bool // True if the player chose to fight barehanded
+	avoidedLastRoom bool          // True if the player avoided the room last turn
 }
 
 func initialModel() *model {
@@ -52,6 +53,7 @@ func initialModel() *model {
 		weaponLimit:    14,      // Can use weapon on any monster to start
 		choosingFight:  false, // Player is not choosing how to fight
 		fightingBarehanded: false,
+		avoidedLastRoom: false,
 	}
 
 	// Deal initial room
@@ -98,6 +100,8 @@ func createDeck() []Card {
 }
 
 func (m *model) dealRoom() {
+	m.avoidedLastRoom = false // Reset avoidedLastRoom at the start of the turn
+
 	// Deal cards from the dungeon to the room until there are 4 cards
 	for len(m.room) < 4 {
 		if len(m.dungeon) > 0 {
@@ -188,6 +192,19 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
+		case "a":
+			// Avoid the room
+			if !m.avoidedLastRoom {
+				// Place the cards at the bottom of the dungeon
+				for _, card := range m.room {
+					m.dungeon = append(m.dungeon, card)
+				}
+				// Clear the room
+				m.room = []Card{}
+				m.dealRoom()
+				m.avoidedLastRoom = true // Mark that the room was avoided
+				return m, nil
+			}
 		case "d":
 			m.dealRoom()
 			return m, nil
@@ -264,6 +281,12 @@ func (m *model) View() string {
 		s += "--------------------------------------------------\n"
 		s += fmt.Sprintf("| Dungeon: %-27d Cards |\n", len(m.dungeon))
 		s += "--------------------------------------------------\n"
+
+		// Show avoid room option if not avoided last room
+		if !m.avoidedLastRoom {
+			s += "| Avoid Room? (a)                      |\n"
+			s += "--------------------------------------------------\n"
+		}
 
 		roomStr := ""
 		for i, card := range m.room {
