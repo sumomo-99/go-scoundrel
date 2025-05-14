@@ -135,11 +135,16 @@ func (m *model) fightMonster(card Card) {
 	if (m.equippedWeapon == Card{}) {
 		m.health -= card.Value
 	} else {
-		damage := card.Value - m.equippedWeapon.Value
-		if damage > 0 {
-			m.health -= damage
+		// Check if the weapon can be used
+		if card.Value > m.weaponLimit {
+			m.health -= card.Value // Fight barehanded
+		} else {
+			damage := card.Value - m.equippedWeapon.Value
+			if damage > 0 {
+				m.health -= damage
+			}
 		}
-		m.weaponLimit = card.Value
+		m.weaponLimit = card.Value // Update weapon limit *after* the fight
 	}
 	m.discard(card)
 }
