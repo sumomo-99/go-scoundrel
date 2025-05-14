@@ -250,6 +250,7 @@ func (m *model) selectCard(index int) *model {
 			return m
 		}
 
+		m.dealRoom()
 	} else {
 		fmt.Println("Invalid card selection")
 	}
