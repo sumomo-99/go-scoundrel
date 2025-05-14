@@ -209,7 +209,8 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	m.selectedCard = -1
 	m.choosingFight = false
 
-	if m.cardsChosen == 3 {
+	// If 3 cards have been chosen (or removed), deal a new room
+	if 4-len(m.room) == 3 {
 		m.dealRoom()
 	}
 	return m, nil
