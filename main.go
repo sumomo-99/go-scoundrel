@@ -328,16 +328,7 @@ func (m *model) View() string {
 		s += "--------------------------------------------------\n"
 		s += fmt.Sprintf(" Dungeon 💥: %-25d Cards \n", len(m.dungeon))
 
-		// Debug mode: display room values
-		if debugMode {
-			s += " Card History:\n"
-			for _, card := range m.cardHistory {
-				s += fmt.Sprintf("   %v\n", card)
-			}
 			s += "--------------------------------------------------\n"
-		} else {
-			s += "--------------------------------------------------\n"
-		}
 
 
 		roomStr := ""
@@ -372,6 +363,14 @@ func (m *model) View() string {
 	}
 	s += fmt.Sprintf(" Score 💰: %-30d \n", m.calculateScore())
 	s += "--------------------------------------------------\n"
+		// Debug mode: display room values
+		if debugMode {
+			s += " Card History:\n"
+			for _, card := range m.cardHistory {
+				s += fmt.Sprintf("   %v\n", card)
+			}
+			s += "--------------------------------------------------\n"
+		}
 	return s
 }
 
