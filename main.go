@@ -322,7 +322,6 @@ func (m *model) View() string {
 		s += "             Game Over!             \n"
 		s += fmt.Sprintf("             Score: %-4d           \n", m.calculateScore())
 		s += " Press 'r' to restart the game.   \n"
-		s += " Press 't' to toggle debug mode. \n"
 		s += "--------------------------------------------------\n"
 	} else {
 		s += fmt.Sprintf(" Health ❤️: %-29d \n", m.health)
