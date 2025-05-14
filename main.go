@@ -9,7 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-var debugMode = true // Enable or disable debug mode
+var debugMode = false // Enable or disable debug mode
 
 type Card struct {
 	Suit      string
