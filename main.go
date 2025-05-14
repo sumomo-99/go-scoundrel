@@ -167,8 +167,11 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	m.weaponLimit = card.Value         // Update weapon limit *after* the fight
-	m.equippedWeapon.MonsterValue = card.Value // Store the monster's value on the weapon
+
+	if !m.fightingBarehanded && (m.equippedWeapon != Card{}) && (card.Value <= m.weaponLimit) {
+		m.weaponLimit = card.Value                  // Update weapon limit *after* the fight
+		m.equippedWeapon.MonsterValue = card.Value // Store the monster's value on the weapon
+	}
 	m.discard(card)
 
 	// Remove the card from the room
