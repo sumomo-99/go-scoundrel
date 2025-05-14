@@ -127,7 +127,6 @@ func (m *model) calculateScore() int {
 }
 
 func (m *model) dealRoom() {
-	m.avoidedLastRoom = false // Reset avoidedLastRoom at the start of the turn
 	m.potionUsedThisTurn = false
 
 	// Deal cards from the dungeon to the room until there are 4 cards
@@ -139,9 +138,10 @@ func (m *model) dealRoom() {
 		} else {
 			// Dungeon is empty, handle this case (e.g., reshuffle discard pile)
 			fmt.Println("Dungeon is empty!") // For now, just print a message
-			break                               // Stop dealing if the dungeon is empty
+			break // Stop dealing if the dungeon is empty
 		}
 	}
+	m.avoidedLastRoom = false // Reset avoidedLastRoom at the start of the turn
 	m.cardsChosen = 0
 	m.selectedCard = -1
 }
