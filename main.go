@@ -286,9 +286,6 @@ func (m *model) selectCard(index int) *model {
 			m.choosingFight = true
 		}
 
-		if m.cardsChosen == 3 {
-			m.dealRoom()
-		}
 	} else {
 		fmt.Println("Invalid card selection")
 	}
