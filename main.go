@@ -71,10 +71,10 @@ func createDeck() []Card {
 	deck := []Card{}
 
 	// Add Clubs and Spades (Monsters)
-	for suit := range []string{"Club", "Spade"} {
+	for suit := range []string{"♣️", "♠️"} {
 		for i := 2; i <= 14; i++ {
 			card := Card{
-				Suit:  []string{"Club", "Spade"}[suit],
+				Suit:  []string{"♣️", "♠️"}[suit],
 				Value: i,
 				Type:  "Monster",
 			}
@@ -85,7 +85,7 @@ func createDeck() []Card {
 	// Add Diamonds (Weapons)
 	for i := 2; i <= 10; i++ {
 		card := Card{
-			Suit:  "Diamond",
+			Suit:  "♦️",
 			Value: i,
 			Type:  "Weapon",
 		}
@@ -95,7 +95,7 @@ func createDeck() []Card {
 	// Add Hearts (Potions)
 	for i := 2; i <= 10; i++ {
 		card := Card{
-			Suit:  "Heart",
+			Suit:  "❤️",
 			Value: i,
 			Type:  "Potion",
 		}
