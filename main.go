@@ -210,6 +210,11 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
 	m.selectedCard = -1
 	m.choosingFight = false
+
+	// If 3 cards have been chosen (or removed), deal a new room
+	if 4-len(m.room) == 3 {
+		m.dealRoom()
+	}
 	return m, nil
 }
 
@@ -296,11 +301,6 @@ func (m *model) selectCard(index int) *model {
 		}
 	} else {
 		fmt.Println("Invalid card selection")
-	}
-
-	// If 3 cards have been chosen (or removed), deal a new room
-	if 4-len(m.room) == 3 {
-		m.dealRoom()
 	}
 	return m
 }
