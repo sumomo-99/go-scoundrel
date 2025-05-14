@@ -339,11 +339,6 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 		}
 
-		// Show avoid room option if not avoided last room
-		if !m.avoidedLastRoom {
-			s += " Avoid Room? (a)                      \n"
-			s += "--------------------------------------------------\n"
-		}
 
 		roomStr := ""
 		for i, card := range m.room {
@@ -357,10 +352,6 @@ func (m *model) View() string {
 		s += fmt.Sprintf(" Room 🚪: %-32s \n", roomStr)
 		s += "--------------------------------------------------\n"
 
-		if m.choosingFight {
-			s += " Fight Barehanded (b) or With Weapon (w)? \n"
-			s += "--------------------------------------------------\n"
-		} else {
 			weaponStr := fmt.Sprintf("%s %d", m.equippedWeapon.Suit, m.equippedWeapon.Value)
 			if m.equippedWeapon.MonsterValue != 0 {
 				weaponStr += fmt.Sprintf(" (Monster: %d)", m.equippedWeapon.MonsterValue)
@@ -369,7 +360,15 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 			s += fmt.Sprintf(" Discard Pile ♻️: %-21d\n", len(m.discardPile))
 			s += "--------------------------------------------------\n"
+
+		if m.choosingFight {
+			s += " Command: Fight Barehanded (b) or With Weapon (w)? \n"
+		} else if !m.avoidedLastRoom {
+			s += " Command: Avoid Room? (a)                      \n"
+		} else {
+			s += " Command: \n"
 		}
+		s += "--------------------------------------------------\n"
 	}
 	s += fmt.Sprintf(" Score 💰: %-30d \n", m.calculateScore())
 	s += "--------------------------------------------------\n"
