@@ -193,12 +193,14 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "b":
 			if m.choosingFight {
 				m.fightingBarehanded = true
-				return m.finishFight(), nil
+				model, cmd := m.finishFight()
+				return model, cmd
 			}
 		case "w":
 			if m.choosingFight {
 				m.fightingBarehanded = false
-				return m.finishFight(), nil
+				model, cmd := m.finishFight()
+				return model, cmd
 			}
 
 		// Handle game over and restart
