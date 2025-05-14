@@ -179,6 +179,10 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
 	m.selectedCard = -1
 	m.choosingFight = false
+
+	if m.cardsChosen == 3 {
+		m.dealRoom()
+	}
 	return m, nil
 }
 
@@ -262,10 +266,6 @@ func (m *model) selectCard(index int) *model {
 		}
 	} else {
 		fmt.Println("Invalid card selection")
-	}
-
-	if m.cardsChosen == 3 {
-		m.dealRoom()
 	}
 	return m
 }
