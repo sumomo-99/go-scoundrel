@@ -169,6 +169,9 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 	m.weaponLimit = card.Value // Update weapon limit *after* the fight
 	m.discard(card)
 
+	// Remove the card from the room
+	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
+	m.selectedCard = -1
 	m.choosingFight = false
 	return m, nil
 }
@@ -232,23 +235,22 @@ func (m *model) selectCard(index int) *model {
 		case "Potion":
 			m.usePotion(card)
 		case "Monster":
+			m.selectedCard = index
 			m.fightMonster(card)
+			m.choosingFight = true
+			return m
 		}
-
-		// Remove the card from the room
-		m.room = append(m.room[:index], m.room[index+1:]...)
 
 		//If 3 cards have been chosen, discard the remaining card and deal a new room
 		if m.cardsChosen == 3 {
 			if len(m.room) > 0 {
 				m.discard(m.room[0])
-				m.room = []Card{}
 			}
 			m.dealRoom()
+			return m
 		}
 
 	} else {
-		m.selectedCard = -1
 		fmt.Println("Invalid card selection")
 	}
 	return m
