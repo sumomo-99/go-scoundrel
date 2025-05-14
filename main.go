@@ -23,7 +23,9 @@ type model struct {
 	discardPile    []Card
 	selectedCard   int // Index of the selected card in the room
 	cardsChosen    int
-	weaponLimit    int // The maximum value a weapon can be used on
+	weaponLimit    int           // The maximum value a weapon can be used on
+	choosingFight  bool          // True if the player is choosing how to fight
+	fightingBarehanded bool // True if the player chose to fight barehanded
 }
 
 func initialModel() *model {
@@ -44,9 +46,11 @@ func initialModel() *model {
 		room:           []Card{},
 		equippedWeapon: Card{}, // Empty card
 		discardPile:    []Card{},
-		selectedCard:   -1, // -1 means no card is selected
+		selectedCard:   -1,      // -1 means no card is selected
 		cardsChosen:    0,
-		weaponLimit:    14, // Can use weapon on any monster to start
+		weaponLimit:    14,      // Can use weapon on any monster to start
+		choosingFight:  false, // Player is not choosing how to fight
+		fightingBarehanded: false,
 	}
 
 	// Deal initial room
@@ -132,21 +136,35 @@ func (m *model) usePotion(card Card) {
 }
 
 func (m *model) fightMonster(card Card) {
-	if (m.equippedWeapon == Card{}) {
+	m.choosingFight = true
+}
+
+func (m *model) finishFight() (tea.Model, tea.Cmd) {
+	card := m.room[m.selectedCard]
+	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
+
+	if m.fightingBarehanded {
 		m.health -= card.Value
 	} else {
-		// Check if the weapon can be used
-		if card.Value > m.weaponLimit {
-			m.health -= card.Value // Fight barehanded
+		if (m.equippedWeapon == Card{}) {
+			m.health -= card.Value
 		} else {
-			damage := card.Value - m.equippedWeapon.Value
-			if damage > 0 {
-				m.health -= damage
+			// Check if the weapon can be used
+			if card.Value > m.weaponLimit {
+				m.health -= card.Value // Fight barehanded
+			} else {
+				damage := card.Value - m.equippedWeapon.Value
+				if damage > 0 {
+					m.health -= damage
+				}
 			}
 		}
-		m.weaponLimit = card.Value // Update weapon limit *after* the fight
 	}
+	m.weaponLimit = card.Value // Update weapon limit *after* the fight
 	m.discard(card)
+
+	m.choosingFight = false
+	return m, nil
 }
 
 func (m *model) Init() tea.Cmd {
@@ -170,6 +188,19 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.selectCard(2), nil
 		case "4":
 			return m.selectCard(3), nil
+
+		// Handle choosing to fight barehanded or with a weapon
+		case "b":
+			if m.choosingFight {
+				m.fightingBarehanded = true
+				return m.finishFight(), nil
+			}
+		case "w":
+			if m.choosingFight {
+				m.fightingBarehanded = false
+				return m.finishFight(), nil
+			}
+
 		// Handle game over and restart
 		case "r":
 			if m.health <= 0 {
@@ -226,6 +257,7 @@ func (m *model) View() string {
 		s += "--------------------------------------------------\n"
 		s += fmt.Sprintf("| Dungeon: %-27d Cards |\n", len(m.dungeon))
 		s += "--------------------------------------------------\n"
+
 		roomStr := ""
 		for i, card := range m.room {
 			selected := ""
@@ -234,12 +266,19 @@ func (m *model) View() string {
 			}
 			roomStr += fmt.Sprintf("[%d:%s%s %d]", i+1, selected, card.Suit, card.Value)
 		}
+
 		s += fmt.Sprintf("| Room: %-34s |\n", roomStr)
 		s += "--------------------------------------------------\n"
-		s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
-		s += "--------------------------------------------------\n"
-		s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
-		s += "--------------------------------------------------\n"
+
+		if m.choosingFight {
+			s += "| Fight Barehanded (b) or With Weapon (w)? |\n"
+			s += "--------------------------------------------------\n"
+		} else {
+			s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
+			s += "--------------------------------------------------\n"
+			s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
+			s += "--------------------------------------------------\n"
+		}
 	}
 	return s
 }
