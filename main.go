@@ -140,6 +140,12 @@ func (m *model) fightMonster(card Card) {
 }
 
 func (m *model) finishFight() (tea.Model, tea.Cmd) {
+	// Check if the selected card is still valid
+	if m.selectedCard < 0 || m.selectedCard >= len(m.room) {
+		m.choosingFight = false
+		return m, nil
+	}
+
 	card := m.room[m.selectedCard]
 	m.room = append(m.room[:m.selectedCard], m.room[m.selectedCard+1:]...)
 
