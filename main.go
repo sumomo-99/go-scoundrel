@@ -28,6 +28,7 @@ type model struct {
 	choosingFight  bool          // True if the player is choosing how to fight
 	fightingBarehanded bool // True if the player chose to fight barehanded
 	avoidedLastRoom bool          // True if the player avoided the room last turn
+	potionUsedThisTurn bool
 }
 
 func initialModel() *model {
@@ -54,6 +55,7 @@ func initialModel() *model {
 		choosingFight:  false, // Player is not choosing how to fight
 		fightingBarehanded: false,
 		avoidedLastRoom: false,
+		potionUsedThisTurn: false,
 	}
 
 	// Deal initial room
@@ -122,6 +124,7 @@ func (m *model) calculateScore() int {
 
 func (m *model) dealRoom() {
 	m.avoidedLastRoom = false // Reset avoidedLastRoom at the start of the turn
+	m.potionUsedThisTurn = false
 
 	// Deal cards from the dungeon to the room until there are 4 cards
 	for len(m.room) < 4 {
@@ -152,11 +155,16 @@ func (m *model) equipWeapon(card Card) {
 }
 
 func (m *model) usePotion(card Card) {
-	m.health += card.Value
-	if m.health > 20 {
-		m.health = 20
+	if !m.potionUsedThisTurn {
+		m.health += card.Value
+		if m.health > 20 {
+			m.health = 20
+		}
+		m.discard(card)
+		m.potionUsedThisTurn = true
+	} else {
+		m.discard(card) // Discard the potion without using it
 	}
-	m.discard(card)
 }
 
 func (m *model) fightMonster(card Card) {
