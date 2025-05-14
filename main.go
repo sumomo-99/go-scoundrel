@@ -99,6 +99,27 @@ func createDeck() []Card {
 	return deck
 }
 
+func (m *model) calculateScore() int {
+	if m.health <= 0 {
+		score := m.health // Negative score if life reaches 0
+		// Find all remaining monsters in the Dungeon and subtract their values
+		for _, card := range m.dungeon {
+			if card.Type == "Monster" {
+				score -= card.Value
+			}
+		}
+		return score
+	}
+
+	// If you have made your way through the entire dungeon, your score is your positive life
+	score := m.health
+	// If your life is 20, and your last card was a health potion, your life + the value of that potion.
+	if m.health == 20 && len(m.discardPile) > 0 && m.discardPile[len(m.discardPile)-1].Type == "Potion" {
+		score += m.discardPile[len(m.discardPile)-1].Value
+	}
+	return score
+}
+
 func (m *model) dealRoom() {
 	m.avoidedLastRoom = false // Reset avoidedLastRoom at the start of the turn
 
@@ -274,6 +295,7 @@ func (m *model) View() string {
 	s := "--------------------------------------------------\n"
 	if m.health <= 0 {
 		s += "|             Game Over!             |\n"
+		s += fmt.Sprintf("|             Score: %-4d           |\n", m.calculateScore())
 		s += "| Press 'r' to restart the game.   |\n"
 		s += "--------------------------------------------------\n"
 	} else {
@@ -314,6 +336,8 @@ func (m *model) View() string {
 			s += "--------------------------------------------------\n"
 		}
 	}
+	s += fmt.Sprintf("| Score: %-32d |\n", m.calculateScore())
+	s += "--------------------------------------------------\n"
 	return s
 }
 
