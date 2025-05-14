@@ -10,9 +10,10 @@ import (
 )
 
 type Card struct {
-	Suit  string
-	Value int
-	Type  string // "Monster", "Weapon", "Potion"
+	Suit      string
+	Value     int
+	Type      string // "Monster", "Weapon", "Potion"
+	MonsterValue int // Value of the monster slain by this weapon
 }
 
 type model struct {
@@ -125,6 +126,7 @@ func (m *model) equipWeapon(card Card) {
 		m.discard(m.equippedWeapon)
 	}
 	m.equippedWeapon = card
+	m.equippedWeapon.MonsterValue = 0 // Reset monster value when equipping a new weapon
 }
 
 func (m *model) usePotion(card Card) {
@@ -165,7 +167,8 @@ func (m *model) finishFight() (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	m.weaponLimit = card.Value // Update weapon limit *after* the fight
+	m.weaponLimit = card.Value         // Update weapon limit *after* the fight
+	m.equippedWeapon.MonsterValue = card.Value // Store the monster's value on the weapon
 	m.discard(card)
 
 	// Remove the card from the room
@@ -281,7 +284,11 @@ func (m *model) View() string {
 			s += "| Fight Barehanded (b) or With Weapon (w)? |\n"
 			s += "--------------------------------------------------\n"
 		} else {
-			s += fmt.Sprintf("| Equipped Weapon: %-10s %-9d |\n", m.equippedWeapon.Suit, m.equippedWeapon.Value)
+			weaponStr := fmt.Sprintf("%s %d", m.equippedWeapon.Suit, m.equippedWeapon.Value)
+			if m.equippedWeapon.MonsterValue > 0 {
+				weaponStr += fmt.Sprintf(" (Monster: %d)", m.equippedWeapon.MonsterValue)
+			}
+			s += fmt.Sprintf("| Equipped Weapon: %-32s |\n", weaponStr)
 			s += "--------------------------------------------------\n"
 			s += fmt.Sprintf("| Discard Pile: %-23d |\n", len(m.discardPile))
 			s += "--------------------------------------------------\n"
