@@ -360,6 +360,8 @@ func (m *model) selectCard(index int) *model {
 
 func (m *model) View() string {
 	s := "--------------------------------------------------\n"
+	s += fmt.Sprintf(" High Score 🏆: %-24d \n", m.highScore)
+	s += "--------------------------------------------------\n"
 	if m.health <= 0 {
 		s += "             Game Over!             \n"
 		s += fmt.Sprintf("             Score: %-4d           \n", m.calculateScore())
