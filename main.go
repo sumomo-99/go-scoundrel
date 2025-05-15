@@ -307,7 +307,7 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.health <= 0 {
 				// Check if the current score is higher than the high score
 				currentScore := m.calculateScore()
-				if currentScore > m.highScore || m.highScore > 0 && currentScore < 0 {
+				if currentScore > m.highScore {
 					m.highScore = currentScore
 					saveHighScore(m.highScore) // Save the new high score
 				}
@@ -430,7 +430,7 @@ func main() {
 
 	// Save the high score when the game exits
 	finalScore := initialModel.calculateScore()
-	if finalScore > initialModel.highScore || initialModel.highScore > 0 && finalScore < 0 {
+	if finalScore > initialModel.highScore {
 		saveHighScore(finalScore)
 	}
 }
