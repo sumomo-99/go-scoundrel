@@ -32,6 +32,7 @@ type model struct {
 	avoidedLastRoom bool          // True if the player avoided the room last turn
 	potionUsedThisTurn bool
 	cardHistory      []CardWithHealth
+	highScore        int
 }
 
 type CardWithHealth struct {
@@ -65,6 +66,7 @@ func initialModel() *model {
 		avoidedLastRoom: false,
 		potionUsedThisTurn: false,
 		cardHistory:      []CardWithHealth{},
+		highScore:        loadHighScore(),
 	}
 
 	// Deal initial room
@@ -108,6 +110,32 @@ func createDeck() []Card {
 	}
 
 	return deck
+}
+
+func loadHighScore() int {
+	// Load high score from file
+	data, err := os.ReadFile("high_score.txt")
+	if err != nil {
+		// If the file doesn't exist or there is an error, return 0
+		return 0
+	}
+
+	var highScore int
+	_, err = fmt.Sscan(string(data), &highScore)
+	if err != nil {
+		// If the file contains invalid data, return 0
+		return 0
+	}
+
+	return highScore
+}
+
+func saveHighScore(score int) {
+	// Save high score to file
+	err := os.WriteFile("high_score.txt", []byte(fmt.Sprintf("%d", score)), 0644)
+	if err != nil {
+		fmt.Println("Error saving high score:", err)
+	}
 }
 
 func (m *model) calculateScore() int {
@@ -233,7 +261,6 @@ func (m *model) Init() tea.Cmd {
 }
 
 func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -278,6 +305,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Handle game over and restart
 		case "r":
 			if m.health <= 0 {
+				// Check if the current score is higher than the high score
+				currentScore := m.calculateScore()
+				if currentScore > m.highScore {
+					m.highScore = currentScore
+					saveHighScore(m.highScore) // Save the new high score
+				}
 				return initialModel(), nil // Restart the game
 			}
 		case "t":
@@ -384,9 +417,18 @@ func (m *model) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
+	// Initialize the high score by loading it from the file
+	initialModel := initialModel()
+
+	p := tea.NewProgram(initialModel, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Alas, there's been an error: %v", err)
 		os.Exit(1)
+	}
+
+	// Save the high score when the game exits
+	finalScore := initialModel.calculateScore()
+	if finalScore > initialModel.highScore {
+		saveHighScore(finalScore)
 	}
 }
