@@ -116,15 +116,15 @@ func loadHighScore() int {
 	// Load high score from file
 	data, err := os.ReadFile("high_score.txt")
 	if err != nil {
-		// If the file doesn't exist or there is an error, return 0
-		return 0
+		// If the file doesn't exist or there is an error, return -228
+		return -228
 	}
 
 	var highScore int
 	_, err = fmt.Sscan(string(data), &highScore)
 	if err != nil {
-		// If the file contains invalid data, return 0
-		return 0
+		// If the file contains invalid data, return -228
+		return -228
 	}
 
 	return highScore
