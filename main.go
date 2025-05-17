@@ -285,7 +285,10 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if currentScore > m.highScore {
 					m.highScore = currentScore
 				}
-				return initialModel(), nil // Restart the game
+				// Create a new model but keep the high score
+				newModel := initialModel()
+				newModel.highScore = m.highScore
+				return newModel, nil // Restart the game
 			}
 		case "t":
 			debugMode = !debugMode
