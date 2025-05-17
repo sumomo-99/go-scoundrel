@@ -66,7 +66,7 @@ func initialModel() *model {
 		avoidedLastRoom: false,
 		potionUsedThisTurn: false,
 		cardHistory:      []CardWithHealth{},
-		highScore:        -72,
+		highScore:        -14,
 	}
 
 	// Deal initial room
