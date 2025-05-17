@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -66,7 +65,7 @@ func initialModel() *model {
 		avoidedLastRoom: false,
 		potionUsedThisTurn: false,
 		cardHistory:      []CardWithHealth{},
-		highScore:        loadHighScore(),
+		highScore:        0,
 	}
 
 	// Deal initial room
@@ -112,35 +111,10 @@ func createDeck() []Card {
 	return deck
 }
 
-func loadHighScore() int {
-	// Load high score from file
-	data, err := os.ReadFile("high_score.txt")
-	if err != nil {
-		// If the file doesn't exist or there is an error, return -228
-		return -228
-	}
-
-	var highScore int
-	_, err = fmt.Sscan(string(data), &highScore)
-	if err != nil {
-		// If the file contains invalid data, return -228
-		return -228
-	}
-
-	return highScore
-}
-
-func saveHighScore(score int) {
-	// Save high score to file
-	err := os.WriteFile("high_score.txt", []byte(fmt.Sprintf("%d", score)), 0644)
-	if err != nil {
-		fmt.Println("Error saving high score:", err)
-	}
-}
-
 func (m *model) calculateScore() int {
 	if m.health <= 0 {
 		score := m.health // Negative score if life reaches 0
+
 		// Find all remaining monsters in the Dungeon and subtract their values
 		for _, card := range m.dungeon {
 			if card.Type == "Monster" {
@@ -309,7 +283,6 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				currentScore := m.calculateScore()
 				if currentScore > m.highScore {
 					m.highScore = currentScore
-					saveHighScore(m.highScore) // Save the new high score
 				}
 				return initialModel(), nil // Restart the game
 			}
@@ -426,11 +399,5 @@ func main() {
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Alas, there's been an error: %v", err)
 		os.Exit(1)
-	}
-
-	// Save the high score when the game exits
-	finalScore := initialModel.calculateScore()
-	if finalScore > initialModel.highScore {
-		saveHighScore(finalScore)
 	}
 }
